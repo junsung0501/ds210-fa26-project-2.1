@@ -1,0 +1,29 @@
+[package]
+name = "fast_vec"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+name = "fast_vec"
+path = "src/lib.rs"
+
+[[bin]]
+name = "fast_playground"
+path = "src/playground.rs"
+
+[[bin]]
+name = "fast_memory"
+path = "src/memory.rs"
+
+[[bin]]
+name = "benchmark"
+path = "src/benchmark.rs"
+
+[dependencies]
+malloc = { path = "../malloc" }
+tracker = { path = "../tracker" }
+plotters = "0.3.7"
+slow_vec = { path = "../slow_vec" }
+
+[dev-dependencies]
+rand = "0.10.0"

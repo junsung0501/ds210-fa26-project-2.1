@@ -1,0 +1,24 @@
+[package]
+name = "slow_vec"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+name = "slow_vec"
+path = "src/lib.rs"
+
+[[bin]]
+name = "slow_playground"
+path = "src/playground.rs"
+
+[[bin]]
+name = "slow_memory"
+path = "src/memory.rs"
+
+[dependencies]
+fixed = { path = "../fixed" }
+tracker = { path = "../tracker" }
+
+[dev-dependencies]
+malloc = { path = "../malloc" }
+rand = "0.10.0"

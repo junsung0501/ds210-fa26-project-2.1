@@ -1,0 +1,9 @@
+[workspace]
+resolver = "3"
+members = [
+    "malloc",
+    "fixed",
+    "tracker",
+    "slow_vec",
+    "fast_vec",
+]

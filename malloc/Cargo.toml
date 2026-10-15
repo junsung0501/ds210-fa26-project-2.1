@@ -1,0 +1,13 @@
+[package]
+name = "malloc"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+name = "malloc"
+path = "src/lib.rs"
+
+[dependencies]
+libc = "0.2.181"
+lazy_static = "1.4.0"
+multi_containers = "0.2.1"

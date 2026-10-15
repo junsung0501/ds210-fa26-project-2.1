@@ -1,0 +1,6 @@
+# Build output. This directory gets big fast and must never be committed.
+/target
+
+# Editor and OS noise
+.DS_Store
+.vscode/
