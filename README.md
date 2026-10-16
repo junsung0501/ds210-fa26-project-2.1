@@ -1,6 +1,6 @@
 # Project 2: Build Your Own Vec
 
-**Author:** _your name here_
+**Author:** John Lee
 
 
 
