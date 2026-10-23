@@ -16,6 +16,12 @@ impl Growth {
     // Whatever the strategy, the answer must always be bigger than `capacity`,
     // or push has nowhere to put the new element.
     pub fn next_capacity(&self, capacity: usize) -> usize {
-        todo!("implement next_capacity!");
+        let proposed = match self {
+            Growth::Double => capacity.saturating_mul(2),
+            Growth::Multiply(factor) => (capacity as f64 * *factor) as usize,
+            Growth::Add(slots) => capacity.saturating_add(*slots),
+        };
+        // Must always be bigger than `capacity` (covers capacity 0, factor <= 1, Add(0)).
+        proposed.max(capacity.saturating_add(1))
     }
 }
