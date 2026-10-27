@@ -105,14 +105,44 @@ impl<T> FastVec<T> {
     }
 
     pub fn remove(&mut self, i: usize) {
-        todo!("implement remove");
+        if i >= self.len {
+            panic!("FastVec: remove out of bounds");
+        }
+        unsafe {
+            // SAFETY: i < self.len, so slot i holds a valid element. ptr::read moves it
+            // out, so this slot must not be dropped again by anyone else.
+            let removed = ptr::read(self.ptr_to_data.add(i));
+            // SAFETY: j + 1 < self.len, so slot j + 1 is valid. We read it out and write it
+            // into slot j, which was already moved out (or just shifted), so nothing is
+            // overwritten while it is still alive.
+            for j in i..self.len - 1 {
+                let element = ptr::read(self.ptr_to_data.add(j + 1));
+                ptr::write(self.ptr_to_data.add(j), element);
+            }
+            self.len -= 1;
+            // The removed element is dropped here, at the end of the block's scope.
+            drop(removed);
+        }
     }
 
     // This appears correct but with further testing, you will notice it has a bug!
     // Hint: check out case 2 in memory.rs, which you can run using
     //       cargo run --bin fast_memory
     pub fn clear(&mut self) {
+        // The bug: the old clear freed the block but never dropped the elements in it,
+        // so anything they owned (like a String's heap buffer) leaked.
+        // Fix: move every element out and drop it first, then free the block.
+        for i in 0..self.len {
+            // SAFETY: i < self.len, so slot i holds a valid element. We read it out
+            // exactly once, and len is reset below, so it is never dropped twice.
+            unsafe {
+                let element = ptr::read(self.ptr_to_data.add(i));
+                drop(element);
+            }
+        }
         if !self.ptr_to_data.is_null() {
+            // SAFETY: ptr_to_data came from MALLOC.malloc and is freed only once here,
+            // then set to null below.
             unsafe { MALLOC.free(self.ptr_to_data as *mut u8); }
         }
         self.ptr_to_data = null_mut();
@@ -121,7 +151,13 @@ impl<T> FastVec<T> {
     }
 }
 
-// YOUR Drop GOES HERE (checkpoint 3).
+// When a FastVec goes out of scope, drop its elements and free its memory.
+// clear() already does both, and it is safe after into_vec() too (len is 0, ptr is null).
+impl<T> Drop for FastVec<T> {
+    fn drop(&mut self) {
+        self.clear();
+    }
+}
 
 // This allows printing FastVecs with println!.
 impl<T: Display> Display for FastVec<T> {
