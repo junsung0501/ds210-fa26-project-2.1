@@ -32,7 +32,9 @@ fn main() {
     let every = 10_000;
     let mut series = Vec::new();
     series.push(("Double", time_fast_pushes(FastVec::with_growth(Growth::Double), n, every)));
-    // YOUR CHOICES GO HERE.
+    series.push(("Multiply 1.5", time_fast_pushes(FastVec::with_growth(Growth::Multiply(1.5)), n, every)));
+    series.push(("Multiply 3", time_fast_pushes(FastVec::with_growth(Growth::Multiply(3.0)), n, every)));
+    series.push(("Multiply 1.1", time_fast_pushes(FastVec::with_growth(Growth::Multiply(1.1)), n, every)));
 
     plot("benchmark_growth.png", "Growth strategies", series);
 }
