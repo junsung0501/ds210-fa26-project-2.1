@@ -73,7 +73,7 @@ For 16 pushes with Double, the resizes happen at pushes 2, 3, 5 and 9 and cost 2
 
 ### 3. Your growth experiments
 
-On `growth-multiply` I tried Multiply 1.5, Multiply 3 and Multiply 1.1 against Double, and on `growth-add` I tried Add 100, Add 1000 and Add 10000 against Double, both with 1,000,000 pushes. The Multiply lines all stay roughly straight, with Multiply 3 lowest and Multiply 1.1 highest because it resizes the most, but the Add lines curve upward and Add 100 shoots far above everything else. I merged `growth-multiply` because all four of its lines are easy to compare, and it shows the memory trade-off: right after a resize, a Multiply(f) vector has 1 - 1/f of its slots empty, so Double wastes about half and Multiply 3 about two thirds, while Add(k) never has more than k empty.
+On `growth-multiply` I tried Multiply 1.5, Multiply 3 and Multiply 1.1 against Double, and on `growth-add` I tried Add 100, Add 1000 and Add 10000 against Double, both with 1,000,000 pushes. The Multiply lines all stay roughly straight, with Multiply 3 lowest and Multiply 1.1 highest because it resizes the most, but the Add lines curve upward and Add 100 shoots far above everything else. I merged `growth-add` because it is the branch I submitted with a perfect score, and the strategies also differ in memory: right after a resize, a Multiply(f) vector has 1 - 1/f of its slots empty, so Double wastes about half and Multiply 3 about two thirds, while Add(k) never has more than k empty.
 
 ### 4. Why `Add` eventually loses
 
@@ -87,10 +87,9 @@ Add(k) resizes every k pushes and copies everything each time, so n pushes cost 
 
 The starter `clear` freed the block of memory but never dropped the elements inside it, so anything they owned, like a String's letters, leaked. I saw it when `clear_drops_every_element` failed with `tracker.is_empty()` even though the memory was freed, and I fixed it by moving each element out with `ptr::read` and dropping it before freeing the block. SlowVec can't have this bug because its `clear` just replaces its `FixedSizeArray`, and the old array's `Drop` already drops every element and frees the block, but FastVec only holds a raw pointer, so Rust doesn't clean up for me.
 
-
 ### 7. Something that failed at first, and how you adapted
 
-My first Checkpoint 3 submission on Gradescope failed 10 tests, covering `remove`, the timing functions, `clear` and `Drop`, even though all 41 tests passed on my laptop. I learned that Gradescope only grades the branch I point it at, and the branch I had picked did not have my new code yet because it was only on `checkpoint-3` and my growth branches. I resubmitted from `growth-add` and got a perfect score.
+I submitted Checkpoint 3 early just to check my code, and Gradescope failed 10 tests, covering `remove`, `clear`, `Drop` and the timing functions, even though all 41 tests passed on my laptop. The errors said `not yet implemented`, which is what `todo!()` prints, and `clear_drops_every_element` failed with `tracker.is_empty()`, so the grader was running the starter code and not mine. I learned that Gradescope only grades the branch I point it at, and my new code was only on `checkpoint-3` and my growth branches, so I resubmitted from `growth-add` and got a perfect score.
 
 ### AI citation
 
