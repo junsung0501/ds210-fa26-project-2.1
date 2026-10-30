@@ -78,14 +78,12 @@ mod remove {
         MALLOC.clear();
 
         let mut tracker = Tracker::new();
-        let mut v = FastVec::from_vec(
-            vec![
-                tracker.track(String::from("hello")),
-                tracker.track(String::from("bye")),
-                tracker.track(String::from("morning")),
-                tracker.track(String::from("hello again")),
-            ]
-        );
+        let mut v = FastVec::from_vec(vec![
+            tracker.track(String::from("hello")),
+            tracker.track(String::from("bye")),
+            tracker.track(String::from("morning")),
+            tracker.track(String::from("hello again")),
+        ]);
 
         assert_eq!(v.len(), 4);
         assert_eq!(v.capacity(), 4);
@@ -128,14 +126,12 @@ mod clear {
         MALLOC.clear();
 
         let mut tracker = Tracker::new();
-        let mut v = FastVec::from_vec(
-            vec![
-                tracker.track(String::from("hello")),
-                tracker.track(String::from("bye")),
-                tracker.track(String::from("morning")),
-                tracker.track(String::from("hello again")),
-            ]
-        );
+        let mut v = FastVec::from_vec(vec![
+            tracker.track(String::from("hello")),
+            tracker.track(String::from("bye")),
+            tracker.track(String::from("morning")),
+            tracker.track(String::from("hello again")),
+        ]);
 
         assert_eq!(v.len(), 4);
         assert_eq!(v.capacity(), 4);
@@ -218,7 +214,10 @@ mod timing {
             assert_eq!(samples[i].0, (i + 1) * every);
             assert!(samples[i].1 >= 0.0);
             if i > 0 {
-                assert!(samples[i].1 >= samples[i - 1].1, "times should never go down");
+                assert!(
+                    samples[i].1 >= samples[i - 1].1,
+                    "times should never go down"
+                );
             }
         }
     }

@@ -1,4 +1,7 @@
-use std::{fmt::{Display, Formatter}, ptr::{self, null_mut}};
+use std::{
+    fmt::{Display, Formatter},
+    ptr::{self, null_mut},
+};
 
 use malloc::MALLOC;
 
@@ -53,7 +56,9 @@ impl<T> FastVec<T> {
                 v.push(element);
             }
         }
-        unsafe { MALLOC.free(self.ptr_to_data as *mut u8); }
+        unsafe {
+            MALLOC.free(self.ptr_to_data as *mut u8);
+        }
         self.ptr_to_data = null_mut();
         self.len = 0;
         self.capacity = 0;
@@ -94,13 +99,17 @@ impl<T> FastVec<T> {
                 }
             }
             if !self.ptr_to_data.is_null() {
-                unsafe { MALLOC.free(self.ptr_to_data as *mut u8); }
+                unsafe {
+                    MALLOC.free(self.ptr_to_data as *mut u8);
+                }
             }
             self.ptr_to_data = new_ptr;
             self.capacity = new_capacity;
         }
         // There is room now (it either had room already, or we just grew): write t.
-        unsafe { ptr::write(self.ptr_to_data.add(self.len), t); }
+        unsafe {
+            ptr::write(self.ptr_to_data.add(self.len), t);
+        }
         self.len += 1;
     }
 
@@ -143,7 +152,9 @@ impl<T> FastVec<T> {
         if !self.ptr_to_data.is_null() {
             // SAFETY: ptr_to_data came from MALLOC.malloc and is freed only once here,
             // then set to null below.
-            unsafe { MALLOC.free(self.ptr_to_data as *mut u8); }
+            unsafe {
+                MALLOC.free(self.ptr_to_data as *mut u8);
+            }
         }
         self.ptr_to_data = null_mut();
         self.len = 0;
@@ -164,7 +175,7 @@ impl<T: Display> Display for FastVec<T> {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "FastVec[")?;
         if self.len > 0 {
-            for i in 0..self.len()-1 {
+            for i in 0..self.len() - 1 {
                 write!(f, "{}, ", self.get(i))?;
             }
             write!(f, "{}", self.get(self.len - 1))?;

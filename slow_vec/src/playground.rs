@@ -11,7 +11,7 @@ fn fixed_sized_array() {
     let mut array: FixedSizeArray<i32> = FixedSizeArray::allocate(2);
     array.put(10, 0);
     array.put(20, 1);
-    println!("{array}");  // You can print a FixedSizeArray directly!
+    println!("{array}"); // You can print a FixedSizeArray directly!
 
     // We can call get many times.
     println!("{}", array.get(0));
@@ -33,7 +33,7 @@ fn fixed_sized_array() {
 fn slow_vec_basics() {
     println!("slow_vec_basics------");
     let slow_vec: SlowVec<i32> = SlowVec::from_vec(vec![10, 20, 30]);
-    println!("{}", slow_vec);  // should print SlowVec(Fixed[10, 20, 30])
+    println!("{}", slow_vec); // should print SlowVec(Fixed[10, 20, 30])
 
     for i in 0..slow_vec.len() {
         println!("Element at {} is {}", i, slow_vec.get(i));
@@ -42,19 +42,18 @@ fn slow_vec_basics() {
     println!("");
 }
 
-
 // This part should work if you implement the push function correctly!
 fn slow_vec_push() {
     println!("slow_vec_push--------");
     let mut slow_vec2: SlowVec<i32> = SlowVec::new();
     slow_vec2.push(10);
-    println!("{}", slow_vec2);  // should print SlowVec(Fixed[10])
+    println!("{}", slow_vec2); // should print SlowVec(Fixed[10])
     slow_vec2.push(20);
-    println!("{}", slow_vec2);  // should print SlowVec(Fixed[10, 20])
+    println!("{}", slow_vec2); // should print SlowVec(Fixed[10, 20])
     slow_vec2.push(30);
-    println!("{}", slow_vec2);  // should print SlowVec(Fixed[10, 20, 30])
+    println!("{}", slow_vec2); // should print SlowVec(Fixed[10, 20, 30])
     slow_vec2.clear();
-    println!("{}", slow_vec2);  // should print SlowVec(Fixed[])
+    println!("{}", slow_vec2); // should print SlowVec(Fixed[])
     println!("---------------------");
     println!("");
 }
@@ -63,15 +62,15 @@ fn slow_vec_push() {
 fn slow_vec_remove() {
     println!("slow_vec_remove------");
     let mut slow_vec3: SlowVec<i32> = SlowVec::from_vec(vec![10, 20, 30, 40]);
-    println!("{}", slow_vec3);  // should print SlowVec(Fixed[10, 20, 30, 40])
+    println!("{}", slow_vec3); // should print SlowVec(Fixed[10, 20, 30, 40])
     slow_vec3.remove(1);
-    println!("{}", slow_vec3);  // should print SlowVec(Fixed[10, 30, 40])
+    println!("{}", slow_vec3); // should print SlowVec(Fixed[10, 30, 40])
     slow_vec3.remove(2);
-    println!("{}", slow_vec3);  // should print SlowVec(Fixed[10, 30])
+    println!("{}", slow_vec3); // should print SlowVec(Fixed[10, 30])
     slow_vec3.remove(0);
-    println!("{}", slow_vec3);  // should print SlowVec(Fixed[30])
+    println!("{}", slow_vec3); // should print SlowVec(Fixed[30])
     slow_vec3.remove(0);
-    println!("{}", slow_vec3);  // should print SlowVec(Fixed[])
+    println!("{}", slow_vec3); // should print SlowVec(Fixed[])
     println!("---------------------");
     println!("");
 }

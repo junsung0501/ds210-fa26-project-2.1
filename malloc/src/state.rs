@@ -1,5 +1,5 @@
-use std::collections::HashMap;
 use multi_containers::HashMultiSet;
+use std::collections::HashMap;
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum Operation {
@@ -52,8 +52,7 @@ impl State {
     }
 
     pub fn has_allocations(&self, sizes: Vec<usize>) -> bool {
-        let mut multiset =
-            HashMultiSet::from_iter(self.allocations.iter().map(|(_k, v)| *v));
+        let mut multiset = HashMultiSet::from_iter(self.allocations.iter().map(|(_k, v)| *v));
         for size in sizes {
             if multiset.remove(&size) == 0 {
                 return false;

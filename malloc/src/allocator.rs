@@ -1,5 +1,5 @@
-use std::cell::{Ref, RefCell};
 use crate::state::State;
+use std::cell::{Ref, RefCell};
 
 pub struct Allocator {
     state: RefCell<State>,
@@ -12,14 +12,14 @@ impl Allocator {
     }
 
     pub unsafe fn malloc(&self, bytes: usize) -> *mut u8 {
-        let ptr = unsafe {
-            libc::malloc(bytes) as *mut u8
-        };
+        let ptr = unsafe { libc::malloc(bytes) as *mut u8 };
         if ptr.is_null() {
             panic!("malloc failed");
         }
 
-        self.state.borrow_mut().record_allocation(ptr as usize, bytes);
+        self.state
+            .borrow_mut()
+            .record_allocation(ptr as usize, bytes);
         ptr
     }
 

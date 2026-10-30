@@ -1,5 +1,5 @@
-use malloc::MALLOC;
 use fast_vec::FastVec;
+use malloc::MALLOC;
 use std::ptr;
 
 // This is a scratch pad for you.
@@ -47,7 +47,7 @@ fn malloc_and_ptr() {
 fn fast_vec_get() {
     println!("fast_vec_get------");
     let fast_vec: FastVec<i32> = FastVec::from_vec(vec![10, 20, 30]);
-    println!("{}", fast_vec);  // should print FastVec[10, 20, 30]
+    println!("{}", fast_vec); // should print FastVec[10, 20, 30]
 
     for i in 0..fast_vec.len() {
         println!("Element at {} is {}", i, fast_vec.get(i));
@@ -56,19 +56,18 @@ fn fast_vec_get() {
     println!("");
 }
 
-
 // This part should work if you implement the push function correctly!
 fn fast_vec_push() {
     println!("fast_vec_push--------");
     let mut fast_vec2: FastVec<i32> = FastVec::new();
     fast_vec2.push(10);
-    println!("{}", fast_vec2);  // should print FastVec[10]
+    println!("{}", fast_vec2); // should print FastVec[10]
     fast_vec2.push(20);
-    println!("{}", fast_vec2);  // should print FastVec[10, 20]
+    println!("{}", fast_vec2); // should print FastVec[10, 20]
     fast_vec2.push(30);
-    println!("{}", fast_vec2);  // should print FastVec[10, 20, 30]
+    println!("{}", fast_vec2); // should print FastVec[10, 20, 30]
     fast_vec2.clear();
-    println!("{}", fast_vec2);  // should print FastVec[]
+    println!("{}", fast_vec2); // should print FastVec[]
     println!("---------------------");
     println!("");
 }
@@ -77,15 +76,15 @@ fn fast_vec_push() {
 fn fast_vec_remove() {
     println!("fast_vec_remove------");
     let mut fast_vec3: FastVec<i32> = FastVec::from_vec(vec![10, 20, 30, 40]);
-    println!("{}", fast_vec3);  // should print FastVec[10, 20, 30, 40]
+    println!("{}", fast_vec3); // should print FastVec[10, 20, 30, 40]
     fast_vec3.remove(1);
-    println!("{}", fast_vec3);  // should print FastVec[10, 30, 40]
+    println!("{}", fast_vec3); // should print FastVec[10, 30, 40]
     fast_vec3.remove(2);
-    println!("{}", fast_vec3);  // should print FastVec[10, 30]
+    println!("{}", fast_vec3); // should print FastVec[10, 30]
     fast_vec3.remove(0);
-    println!("{}", fast_vec3);  // should print FastVec[30]
+    println!("{}", fast_vec3); // should print FastVec[30]
     fast_vec3.remove(0);
-    println!("{}", fast_vec3);  // should print FastVec[]
+    println!("{}", fast_vec3); // should print FastVec[]
     println!("---------------------");
     println!("");
 }
