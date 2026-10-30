@@ -16,8 +16,6 @@ fn main() {
     tracker.print_status();
     println!("End of case 1-----------");
 
-
-
     println!("Case 2------------------");
     let mut tracker2 = Tracker::new();
 

@@ -161,7 +161,7 @@ mod memory {
         assert!(MALLOC.state().transcript()[4].is_free());
 
         v.clear();
-        assert_eq!(MALLOC.state().allocations().len(),  0);
+        assert_eq!(MALLOC.state().allocations().len(), 0);
         assert_eq!(MALLOC.state().transcript().len(), 6);
         assert!(MALLOC.state().transcript()[5].is_free());
 
@@ -190,9 +190,11 @@ mod memory {
 
             assert_eq!(v.len(), 5 - i - 1);
             assert_eq!(MALLOC.state().allocations().len(), 1);
-            assert_eq!(MALLOC.state().transcript().len(), 9 + 2*i + 2);
-            assert!(MALLOC.state().transcript()[9 + 2*i].is_allocation(size_of::<i32>() * v.len()));
-            assert!(MALLOC.state().transcript()[9 + 2*i + 1].is_free());
+            assert_eq!(MALLOC.state().transcript().len(), 9 + 2 * i + 2);
+            assert!(
+                MALLOC.state().transcript()[9 + 2 * i].is_allocation(size_of::<i32>() * v.len())
+            );
+            assert!(MALLOC.state().transcript()[9 + 2 * i + 1].is_free());
         }
 
         v.remove(*removes.last().unwrap());

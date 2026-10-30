@@ -1,4 +1,7 @@
-use std::{fmt::{Display, Formatter}, ptr::{self, null_mut}};
+use std::{
+    fmt::{Display, Formatter},
+    ptr::{self, null_mut},
+};
 
 use malloc::MALLOC;
 
@@ -53,7 +56,9 @@ impl<T> FastVec<T> {
                 v.push(element);
             }
         }
-        unsafe { MALLOC.free(self.ptr_to_data as *mut u8); }
+        unsafe {
+            MALLOC.free(self.ptr_to_data as *mut u8);
+        }
         self.ptr_to_data = null_mut();
         self.len = 0;
         self.capacity = 0;
@@ -94,26 +99,62 @@ impl<T> FastVec<T> {
                 }
             }
             if !self.ptr_to_data.is_null() {
-                unsafe { MALLOC.free(self.ptr_to_data as *mut u8); }
+                unsafe {
+                    MALLOC.free(self.ptr_to_data as *mut u8);
+                }
             }
             self.ptr_to_data = new_ptr;
             self.capacity = new_capacity;
         }
         // There is room now (it either had room already, or we just grew): write t.
-        unsafe { ptr::write(self.ptr_to_data.add(self.len), t); }
+        unsafe {
+            ptr::write(self.ptr_to_data.add(self.len), t);
+        }
         self.len += 1;
     }
 
     pub fn remove(&mut self, i: usize) {
-        todo!("implement remove");
+        if i >= self.len {
+            panic!("FastVec: remove out of bounds");
+        }
+        unsafe {
+            // SAFETY: i < self.len, so slot i holds a valid element. ptr::read moves it
+            // out, so this slot must not be dropped again by anyone else.
+            let removed = ptr::read(self.ptr_to_data.add(i));
+            // SAFETY: j + 1 < self.len, so slot j + 1 is valid. We read it out and write it
+            // into slot j, which was already moved out (or just shifted), so nothing is
+            // overwritten while it is still alive.
+            for j in i..self.len - 1 {
+                let element = ptr::read(self.ptr_to_data.add(j + 1));
+                ptr::write(self.ptr_to_data.add(j), element);
+            }
+            self.len -= 1;
+            // The removed element is dropped here, at the end of the block's scope.
+            drop(removed);
+        }
     }
 
     // This appears correct but with further testing, you will notice it has a bug!
     // Hint: check out case 2 in memory.rs, which you can run using
     //       cargo run --bin fast_memory
     pub fn clear(&mut self) {
+        // The bug: the old clear freed the block but never dropped the elements in it,
+        // so anything they owned (like a String's heap buffer) leaked.
+        // Fix: move every element out and drop it first, then free the block.
+        for i in 0..self.len {
+            // SAFETY: i < self.len, so slot i holds a valid element. We read it out
+            // exactly once, and len is reset below, so it is never dropped twice.
+            unsafe {
+                let element = ptr::read(self.ptr_to_data.add(i));
+                drop(element);
+            }
+        }
         if !self.ptr_to_data.is_null() {
-            unsafe { MALLOC.free(self.ptr_to_data as *mut u8); }
+            // SAFETY: ptr_to_data came from MALLOC.malloc and is freed only once here,
+            // then set to null below.
+            unsafe {
+                MALLOC.free(self.ptr_to_data as *mut u8);
+            }
         }
         self.ptr_to_data = null_mut();
         self.len = 0;
@@ -121,14 +162,20 @@ impl<T> FastVec<T> {
     }
 }
 
-// YOUR Drop GOES HERE (checkpoint 3).
+// When a FastVec goes out of scope, drop its elements and free its memory.
+// clear() already does both, and it is safe after into_vec() too (len is 0, ptr is null).
+impl<T> Drop for FastVec<T> {
+    fn drop(&mut self) {
+        self.clear();
+    }
+}
 
 // This allows printing FastVecs with println!.
 impl<T: Display> Display for FastVec<T> {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "FastVec[")?;
         if self.len > 0 {
-            for i in 0..self.len()-1 {
+            for i in 0..self.len() - 1 {
                 write!(f, "{}, ", self.get(i))?;
             }
             write!(f, "{}", self.get(self.len - 1))?;

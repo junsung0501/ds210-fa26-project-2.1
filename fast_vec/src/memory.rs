@@ -15,7 +15,10 @@ fn main() {
     fast_vec.remove(0);
     println!("{}", fast_vec);
     tracker.print_status();
-    println!("Transcript of allocations {:?}", MALLOC.state().transcript());
+    println!(
+        "Transcript of allocations {:?}",
+        MALLOC.state().transcript()
+    );
     println!("End of case 1-----------");
 
     println!("Case 2------------------");
@@ -31,6 +34,9 @@ fn main() {
 
     fast_vec.clear();
     tracker2.print_status();
-    println!("Transcript of allocations {:?}", MALLOC.state().transcript());
+    println!(
+        "Transcript of allocations {:?}",
+        MALLOC.state().transcript()
+    );
     println!("End of case 2-----------");
 }

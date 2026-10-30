@@ -12,7 +12,9 @@ struct Displayable {
 }
 impl Displayable {
     fn new<T: MyTrait>(value: T) -> Displayable {
-        return Displayable { value: Box::new(value) };
+        return Displayable {
+            value: Box::new(value),
+        };
     }
     fn cast_ref<T: MyTrait>(&self) -> &T {
         let r = self.value.as_ref() as &dyn Any;
@@ -66,7 +68,6 @@ impl Tracker {
         return self.map.len();
     }
 }
-
 
 // Represents a tracked value of type T.
 pub struct Tracked<T: Display + Any + 'static> {

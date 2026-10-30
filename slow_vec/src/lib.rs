@@ -1,5 +1,5 @@
-use std::fmt::{Display, Formatter};
 use fixed::FixedSizeArray;
+use std::fmt::{Display, Formatter};
 
 // A SlowVec contains a fixed number of elements.
 // The elements are of type "T"
@@ -16,10 +16,10 @@ pub struct SlowVec<T> {
 impl<T> SlowVec<T> {
     pub fn new() -> Self {
         return SlowVec {
-            fixed: FixedSizeArray::allocate(0)
+            fixed: FixedSizeArray::allocate(0),
         };
     }
-    
+
     // returns the length of the SlowVec.
     pub fn len(&self) -> usize {
         return self.fixed.len();
@@ -83,7 +83,6 @@ impl<T> SlowVec<T> {
         self.fixed = new_array;
     }
 }
-
 
 // This allows us to print the SlowVec using println!().
 impl<T: Display> Display for SlowVec<T> {

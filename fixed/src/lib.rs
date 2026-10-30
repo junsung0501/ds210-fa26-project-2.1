@@ -1,7 +1,7 @@
+use malloc::MALLOC;
 use std::collections::HashSet;
 use std::fmt::{Display, Formatter};
 use std::ptr::null_mut;
-use malloc::MALLOC;
 
 pub struct FixedSizeArray<T> {
     ptr: *mut T,
@@ -18,7 +18,7 @@ impl<T> FixedSizeArray<T> {
         return FixedSizeArray {
             ptr: ptr,
             initialized: HashSet::new(),
-            len: len
+            len: len,
         };
     }
 
@@ -28,7 +28,10 @@ impl<T> FixedSizeArray<T> {
                 panic!("Index out of bounds");
             }
             if !self.initialized.contains(&i) {
-                panic!("attempting to get element at {} before it is initialized", i);
+                panic!(
+                    "attempting to get element at {} before it is initialized",
+                    i
+                );
             }
             let tmp = self.ptr.add(i);
             return &*tmp;
@@ -41,7 +44,10 @@ impl<T> FixedSizeArray<T> {
                 panic!("Index out of bounds");
             }
             if !self.initialized.contains(&i) {
-                panic!("attempting to move_out element at {} before it is initialized", i);
+                panic!(
+                    "attempting to move_out element at {} before it is initialized",
+                    i
+                );
             }
             self.initialized.remove(&i);
             let tmp = self.ptr.add(i);
@@ -55,7 +61,10 @@ impl<T> FixedSizeArray<T> {
                 panic!("Index out of bounds");
             }
             if self.initialized.contains(&i) {
-                panic!("attempting to put element at {} but a different element already exists there", i);
+                panic!(
+                    "attempting to put element at {} but a different element already exists there",
+                    i
+                );
             }
             self.initialized.insert(i);
             let tmp = self.ptr.add(i);
@@ -76,7 +85,9 @@ impl<T> Drop for FixedSizeArray<T> {
                     let _element = self.move_out(i);
                 }
             }
-            unsafe { MALLOC.free(self.ptr as *mut u8); }
+            unsafe {
+                MALLOC.free(self.ptr as *mut u8);
+            }
         }
     }
 }
@@ -86,7 +97,7 @@ impl<T: Display> Display for FixedSizeArray<T> {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "Fixed[")?;
         if self.len > 0 {
-            for i in 0..self.len-1 {
+            for i in 0..self.len - 1 {
                 write!(f, "{}, ", self.get(i))?;
             }
             write!(f, "{}", self.get(self.len - 1))?;
